@@ -3,7 +3,7 @@ import React, { useState } from "react";
 type UserInfoModalProps = {
   open: boolean;
   onClose: () => void;
-  onSubmit: (name: string, phone: string) => void;
+  onSubmit: (name: string, phone: string, address:string) => void;
 };
 
 const UserInfoModal: React.FC<UserInfoModalProps> = ({
@@ -13,6 +13,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({
 }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const[address, setAddress]=useState("")
   const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -22,7 +23,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({
       return;
     }
     setError("");
-    onSubmit(name, phone);
+    onSubmit(name, phone, address);
     setName("");
     setPhone("");
     onClose();
@@ -48,6 +49,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({
             placeholder="Your Name"
             value={name}
             onChange={e => setName(e.target.value)}
+            required
           />
           <input
             type="tel"
@@ -57,6 +59,15 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({
             onChange={e => setPhone(e.target.value)}
             pattern="[0-9]{10,15}"
             maxLength={15}
+            required
+          />
+
+          <textarea
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            placeholder="Address"
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+            required
           />
           {error && <div className="text-red-500 text-sm">{error}</div>}
           <button

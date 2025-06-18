@@ -6,31 +6,31 @@ import UserInfoModal from "./UserInfoModal";
 
 
 const Services = () => {
-  const [isLoading, setIsLoading] = useState<number | null>(null);
-  type PaymentDetail = {
-    id: string;
-    amount: number;
-    // add other properties as needed
-  };
-  const [paymentDetail, setPayementDetails] = useState<PaymentDetail | null>(null);
+  const [curService, setCurService] = useState<any | null>(null);
+ 
+  const [paymentDetail, setPayementDetails] = useState<any | null>(null);
   const [showPaymentModal, setPaymentModal] = useState(false);
   const [showUserInfoModal, setUserInfoModal] = useState(false);
   
-
-  const handleUserSubmitUserInfoModal=(name:string, phoneNu:string)=>{
-    console.log(name, phoneNu)
-    
+  const bookBtnClickHanlder=(service: any)=>{
+    setCurService(service)
+    setUserInfoModal(true);
   }
 
-  const handlePayment = async (service: any) => {
+  const handleUserSubmitUserInfoModal=(name:string, phoneNu:string, address:string)=>{
+    console.log(name, phoneNu, address)
+    handlePayment(curService, name, phoneNu, address)
+  }
+
+  const handlePayment = async (service: any, name:string, phoneNu:string, address:string) => {
     try {
-      setIsLoading(service.id);
       const amount = parseInt(service.price.replace('₹', ''));
 
       // You can replace these with actual customer details from a form or user profile
       const customerDetails = {
-        name: 'Test Name',
-        phoneNu: '1234567890'
+        name: name,
+        phoneNu: phoneNu,
+        address:address
       };
       console.log(amount, service.name, customerDetails);
       await initiatePayment(amount, service.name, customerDetails, setPayementDetails, setPaymentModal);
@@ -38,7 +38,7 @@ const Services = () => {
       console.error('Payment failed:', error);
       alert('Payment failed. Please try again.');
     } finally {
-      setIsLoading(null);
+      setCurService(null);
     }
   };
 
@@ -164,11 +164,11 @@ const Services = () => {
 
                 <div className="flex space-x-3">
                   <button
-                    onClick={() => handlePayment(service)}
-                    disabled={isLoading === service.id}
+                    onClick={() => bookBtnClickHanlder(service)}
+                    disabled={curService && curService.id === service.id}
                     className="flex-1 bg-blue-600 text-white text-center py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isLoading === service.id ? 'Processing...' : 'Book'}
+                    {curService && curService.id === service.id ? 'Processing...' : 'Book'}
                   </button>
                   <a
                     href="https://wa.me/918295151180"
@@ -187,7 +187,7 @@ const Services = () => {
     <PaymentSuccessModal
       open={showPaymentModal}
       onClose={() => setPaymentModal(false)}
-      paymentId={paymentDetail?.id ?? ""}
+      payment={paymentDetail}
       amount={paymentDetail?.amount ?? 0}
       date={`${new Date()}`}
     />

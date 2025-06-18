@@ -3,7 +3,7 @@
 type PaymentSuccessModalProps = {
   open: boolean;
   onClose: () => void;
-  paymentId: string;
+  payment:any;
   amount: number;
   date: string;
 };
@@ -11,7 +11,7 @@ type PaymentSuccessModalProps = {
 const PaymentSuccessModal = ({
   open,
   onClose,
-  paymentId,
+  payment,
   amount,
   date
 }: PaymentSuccessModalProps) => {
@@ -33,7 +33,11 @@ const PaymentSuccessModal = ({
         <div className="bg-gray-100 rounded-lg p-4 text-left text-sm mb-6 space-y-1">
           <div>
             <span className="font-medium">Payment ID:</span>{" "}
-            <span className="break-all">{paymentId}</span>
+            <span className="break-all">{payment.paymentId}</span>
+          </div>
+          <div>
+            <span className="font-medium">Order ID:</span>{" "}
+            <span className="break-all">{payment.orderId}</span>
           </div>
           <div>
             <span className="font-medium">Amount:</span> ₹{amount.toFixed(2)}

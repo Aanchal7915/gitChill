@@ -12,6 +12,7 @@ interface RazorpayOptions {
   notes?: {
     name: string;
     phoneNu: string;
+    address:string;
   };
   prefill: {
     name: string;
@@ -29,14 +30,14 @@ export const initializeRazorpay = async () => {
   }
 };
 
-export const createOrder = async (amount: number,name:string, phoneNu:string) => {
+export const createOrder = async (amount: number,name:string, phoneNu:string, address:string) => {
   try {
     const response = await fetch(`${ import.meta.env.VITE_BACKEND_URL}/api/v1/payment/create-order`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ amount, name, phoneNu }),
+      body: JSON.stringify({ amount, name, phoneNu, address }),
     });
     const data = await response.json();
     return data;
@@ -49,6 +50,7 @@ export const createOrder = async (amount: number,name:string, phoneNu:string) =>
 interface CustomerDetails {
   name: string;
   phoneNu: string;
+  address:string;
 }
 
 type SetPaymentDetails = (details: any) => void;
@@ -63,7 +65,7 @@ export const initiatePayment = async (
 ): Promise<void> => {
   try {
     await initializeRazorpay();
-    const orderData = await createOrder(amount, customerDetails.name, customerDetails.phoneNu);
+    const orderData = await createOrder(amount, customerDetails.name, customerDetails.phoneNu, customerDetails.address);
 
     const options: RazorpayOptions = {
       key: import.meta.env.VITE_PUBLIC_RAZORPAY_KEY_ID || '',
@@ -76,12 +78,13 @@ export const initiatePayment = async (
         // Handle successful payment
         console.log('Payment successful:', response);
         // You can add additional logic here like updating the order status
-        setPayementDetails({id:response.razorpay_payment_id, amount})
+        setPayementDetails({paymentId:response.razorpay_payment_id, orderId:response.razorpay_order_id, amount})
         setPaymentModal(true)
       },
       notes: {
         name: customerDetails.name,
         phoneNu: customerDetails.phoneNu,
+        address:customerDetails.address
       },
       prefill: {
         name: customerDetails.name,
