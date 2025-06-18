@@ -1,23 +1,39 @@
 import { Wrench, Settings, Thermometer, Wind, Zap, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 import { initiatePayment } from '../utils/paymentService';
+import PaymentSuccessModal from './PaymentSuccessModal';
+import UserInfoModal from "./UserInfoModal";
+
 
 const Services = () => {
   const [isLoading, setIsLoading] = useState<number | null>(null);
+  type PaymentDetail = {
+    id: string;
+    amount: number;
+    // add other properties as needed
+  };
+  const [paymentDetail, setPayementDetails] = useState<PaymentDetail | null>(null);
+  const [showPaymentModal, setPaymentModal] = useState(false);
+  const [showUserInfoModal, setUserInfoModal] = useState(false);
+  
+
+  const handleUserSubmitUserInfoModal=(name:string, phoneNu:string)=>{
+    console.log(name, phoneNu)
+    
+  }
 
   const handlePayment = async (service: any) => {
     try {
       setIsLoading(service.id);
       const amount = parseInt(service.price.replace('₹', ''));
-      
+
       // You can replace these with actual customer details from a form or user profile
       const customerDetails = {
-        name: 'Customer Name',
-        email: 'customer@email.com',
-        contact: '1234567890'
+        name: 'Test Name',
+        phoneNu: '1234567890'
       };
       console.log(amount, service.name, customerDetails);
-      await initiatePayment(amount, service.name, customerDetails);
+      await initiatePayment(amount, service.name, customerDetails, setPayementDetails, setPaymentModal);
     } catch (error) {
       console.error('Payment failed:', error);
       alert('Payment failed. Please try again.');
@@ -101,7 +117,8 @@ const Services = () => {
     }
   ];
 
-  return ( <section id="services" className="py-16 lg:py-20 bg-gray-50">
+  return (<>
+    <section id="services" className="py-16 lg:py-20 bg-gray-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 lg:mb-16">
           <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-800 mb-4 lg:mb-6">
@@ -114,13 +131,13 @@ const Services = () => {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {services.map((service) => (
-            <div 
-              key={service.id} 
+            <div
+              key={service.id}
               className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group"
             >
               <div className="relative overflow-hidden">
-                <img 
-                  src={service.image} 
+                <img
+                  src={service.image}
                   alt={service.name}
                   className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                 />
@@ -131,10 +148,11 @@ const Services = () => {
                   {service.price}
                 </div>
               </div>
-              
+
+
               <div className="p-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">{service.name}</h3>
-                
+
                 <ul className="space-y-2 mb-6">
                   {service.features.map((feature, index) => (
                     <li key={index} className="flex items-center space-x-2 text-gray-600">
@@ -145,15 +163,15 @@ const Services = () => {
                 </ul>
 
                 <div className="flex space-x-3">
-                  <button 
+                  <button
                     onClick={() => handlePayment(service)}
                     disabled={isLoading === service.id}
                     className="flex-1 bg-blue-600 text-white text-center py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLoading === service.id ? 'Processing...' : 'Book'}
                   </button>
-                  <a 
-                    href="https://wa.me/918295151180" 
+                  <a
+                    href="https://wa.me/918295151180"
                     className="flex-1 bg-green-600 text-white text-center py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold text-sm"
                   >
                     WhatsApp
@@ -165,6 +183,22 @@ const Services = () => {
         </div>
       </div>
     </section>
+
+    <PaymentSuccessModal
+      open={showPaymentModal}
+      onClose={() => setPaymentModal(false)}
+      paymentId={paymentDetail?.id ?? ""}
+      amount={paymentDetail?.amount ?? 0}
+      date={`${new Date()}`}
+    />
+
+    <UserInfoModal
+      open={showUserInfoModal}
+      onClose={() => setUserInfoModal(false)}
+      onSubmit={handleUserSubmitUserInfoModal}
+    />
+
+  </>
   );
 };
 

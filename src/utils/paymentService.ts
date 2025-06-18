@@ -1,3 +1,4 @@
+import { Phone } from 'lucide-react';
 import { loadScript } from './loadScript';
 
 interface RazorpayOptions {
@@ -8,10 +9,13 @@ interface RazorpayOptions {
   description: string;
   order_id: string;
   handler: (response: any) => void;
+  notes?: {
+    name: string;
+    phoneNu: string;
+  };
   prefill: {
     name: string;
-    email: string;
-    contact: string;
+    phoneNU: string;
   };
   theme: {
     color: string;
@@ -25,14 +29,14 @@ export const initializeRazorpay = async () => {
   }
 };
 
-export const createOrder = async (amount: number) => {
+export const createOrder = async (amount: number,name:string, phoneNu:string) => {
   try {
-    const response = await fetch('/api/create-order', {
+    const response = await fetch(`${ import.meta.env.VITE_BACKEND_URL}/api/v1/payment/create-order`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ amount }),
+      body: JSON.stringify({ amount, name, phoneNu }),
     });
     const data = await response.json();
     return data;
@@ -42,35 +46,46 @@ export const createOrder = async (amount: number) => {
   }
 };
 
+interface CustomerDetails {
+  name: string;
+  phoneNu: string;
+}
+
+type SetPaymentDetails = (details: any) => void;
+type SetPaymentModal = (open: boolean) => void;
+
 export const initiatePayment = async (
   amount: number,
   serviceName: string,
-  customerDetails: {
-    name: string;
-    email: string;
-    contact: string;
-  }
-) => {
+  customerDetails: CustomerDetails,
+  setPayementDetails: SetPaymentDetails,
+  setPaymentModal: SetPaymentModal
+): Promise<void> => {
   try {
     await initializeRazorpay();
-    const orderData = await createOrder(amount);
+    const orderData = await createOrder(amount, customerDetails.name, customerDetails.phoneNu);
 
     const options: RazorpayOptions = {
-      key: process.env.VITE_PUBLIC_RAZORPAY_KEY_ID || '',
-      amount: amount * 100, // Razorpay expects amount in paise
-      currency: 'INR',
+      key: import.meta.env.VITE_PUBLIC_RAZORPAY_KEY_ID || '',
+      amount: amount * 100, // Razorpay expects amount in paise use instead orderData.amount
+      currency: 'INR',//orderData.currency
       name: 'AC Service Booking',
       description: `Payment for ${serviceName}`,
-      order_id: orderData.id,
-      handler: function (response) {
+      order_id: orderData.orderId,
+      handler: function (response: any) {
         // Handle successful payment
         console.log('Payment successful:', response);
         // You can add additional logic here like updating the order status
+        setPayementDetails({id:response.razorpay_payment_id, amount})
+        setPaymentModal(true)
+      },
+      notes: {
+        name: customerDetails.name,
+        phoneNu: customerDetails.phoneNu,
       },
       prefill: {
         name: customerDetails.name,
-        email: customerDetails.email,
-        contact: customerDetails.contact,
+        phoneNU: customerDetails.phoneNu,
       },
       theme: {
         color: '#2563EB', // Blue color matching your UI
