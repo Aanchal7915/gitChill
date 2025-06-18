@@ -11,7 +11,7 @@ interface RazorpayOptions {
   handler: (response: any) => void;
   notes?: {
     name: string;
-    phoneNu: string;
+    contact: string;
     address:string;
   };
   prefill: {
@@ -83,7 +83,7 @@ export const initiatePayment = async (
       },
       notes: {
         name: customerDetails.name,
-        phoneNu: customerDetails.phoneNu,
+        contact: customerDetails.phoneNu,
         address:customerDetails.address
       },
       prefill: {

@@ -26,6 +26,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({
     onSubmit(name, phone, address);
     setName("");
     setPhone("");
+    setAddress("")
     onClose();
   };
 
