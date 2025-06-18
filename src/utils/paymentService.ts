@@ -16,7 +16,7 @@ interface RazorpayOptions {
   };
   prefill: {
     name: string;
-    phoneNU: string;
+    contact: string;
   };
   theme: {
     color: string;
@@ -88,7 +88,7 @@ export const initiatePayment = async (
       },
       prefill: {
         name: customerDetails.name,
-        phoneNU: customerDetails.phoneNu,
+        contact: customerDetails.phoneNu,
       },
       theme: {
         color: '#2563EB', // Blue color matching your UI
