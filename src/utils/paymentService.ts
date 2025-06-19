@@ -42,7 +42,7 @@ export const createOrder = async (amount: number,name:string, phoneNu:string, ad
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error creating order:', error);
+    // console.error('Error creating order:', error);
     throw error;
   }
 };
@@ -75,9 +75,6 @@ export const initiatePayment = async (
       description: `Payment for ${serviceName}`,
       order_id: orderData.orderId,
       handler: function (response: any) {
-        // Handle successful payment
-        console.log('Payment successful:', response);
-        // You can add additional logic here like updating the order status
         setPayementDetails({paymentId:response.razorpay_payment_id, orderId:response.razorpay_order_id, amount})
         setPaymentModal(true)
       },

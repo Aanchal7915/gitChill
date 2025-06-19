@@ -18,7 +18,7 @@ const Services = () => {
   }
 
   const handleUserSubmitUserInfoModal=(name:string, phoneNu:string, address:string)=>{
-    console.log(name, phoneNu, address)
+    // console.log(name, phoneNu, address)
     handlePayment(curService, name, phoneNu, address)
   }
 
@@ -32,10 +32,10 @@ const Services = () => {
         phoneNu: phoneNu,
         address:address
       };
-      console.log(amount, service.name, customerDetails);
+      // console.log(amount, service.name, customerDetails);
       await initiatePayment(amount, service.name, customerDetails, setPayementDetails, setPaymentModal);
     } catch (error) {
-      console.error('Payment failed:', error);
+      // console.error('Payment failed:', error);
       alert('Payment failed. Please try again.');
     } finally {
       setCurService(null);
