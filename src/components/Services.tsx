@@ -194,7 +194,7 @@ const Services = () => {
 
     <UserInfoModal
       open={showUserInfoModal}
-      onClose={() => setUserInfoModal(false)}
+      onClose={() => {setUserInfoModal(false); setCurService(null)}}
       onSubmit={handleUserSubmitUserInfoModal}
     />
 
