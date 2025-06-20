@@ -32,7 +32,7 @@ export const initializeRazorpay = async () => {
 
 export const createOrder = async (amount: number,name:string, phoneNu:string, address:string) => {
   try {
-    const response = await fetch(`${ import.meta.env.VITE_BACKEND_URL}/api/v1/payment/create-order`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/payment/create-order`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

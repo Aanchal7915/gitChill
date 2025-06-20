@@ -221,7 +221,7 @@ const Admin: React.FC = () => {
         if (serviceStatus) params.append("serviceStatus", serviceStatus);
         params.append("page", currentPage.toString());
         params.append("limit", PAGE_SIZE.toString());
-        const url = `http://localhost:4000/api/v1/admin/admin-data?${params.toString()}`;
+        const url = `${import.meta.env.VITE_BACKEND_URL}/api/v1/admin/admin-data?${params.toString()}`;
         const res = await fetch(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -274,7 +274,7 @@ const Admin: React.FC = () => {
   const handleStatusChange = async (id: string, serviceStatusVal: boolean) => {
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch("http://localhost:4000/api/v1/admin/update-status", {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/admin/update-status`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
