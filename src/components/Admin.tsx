@@ -35,7 +35,7 @@ const AdminHeader: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-between bg-green-600 text-white px-6 py-4 rounded-lg mb-6 shadow">
+    <div className="flex items-center justify-between bg-green-600 text-white px-6 py-4 rounded-lg mb-6 shadow animate-fade-in-down">
       <div className="flex items-center gap-2 text-xl font-bold">
         <span>Admin Panel</span>
       </div>
@@ -64,7 +64,7 @@ const BookingRow: React.FC<{
   booking: Booking;
   onStatusChange: (id: string, serviceStatus: boolean) => void;
 }> = ({ booking, onStatusChange }) => (
-  <tr className="border-b hover:bg-gray-50 transition">
+  <tr className="border-b hover:bg-green-50 transition animate-row-fade-in">
     <td className="p-2">{booking.name}</td>
     <td className="p-2">{booking.email}</td>
     <td className="p-2">{booking.contact}</td>
@@ -75,9 +75,9 @@ const BookingRow: React.FC<{
     <td className="p-2">{new Date(booking.createdAt).toLocaleString()}</td>
     <td className="p-2">
       <span
-        className={`px-2 py-1 rounded text-xs font-semibold ${
+        className={`px-2 py-1 rounded text-xs font-semibold transition-all duration-300 ${
           booking.paymentStatus === "captured"
-            ? "bg-green-100 text-green-700"
+            ? "bg-green-100 text-green-700 animate-pulse-green"
             : "bg-yellow-100 text-yellow-700"
         }`}
       >
@@ -86,10 +86,10 @@ const BookingRow: React.FC<{
     </td>
     <td className="p-2">
       <span
-        className={`px-2 py-1 rounded text-xs font-semibold ${
+        className={`px-2 py-1 rounded text-xs font-semibold transition-all duration-300 ${
           booking.serviceStatus
-            ? "bg-green-100 text-green-700"
-            : "bg-red-100 text-red-700"
+            ? "bg-green-100 text-green-700 animate-pulse-green"
+            : "bg-red-100 text-red-700 animate-pulse-red"
         }`}
       >
         {booking.serviceStatus ? "Fulfilled" : "Pending"}
@@ -97,7 +97,7 @@ const BookingRow: React.FC<{
     </td>
     <td className="p-2">
       <button
-        className={`px-3 py-1 rounded ${
+        className={`px-3 py-1 rounded shadow transition-all duration-300 transform hover:scale-105 ${
           booking.serviceStatus
             ? "bg-yellow-500 hover:bg-yellow-600 text-white"
             : "bg-green-500 hover:bg-green-600 text-white"
@@ -126,16 +126,16 @@ const BookingFilter: React.FC<{
   serviceStatus,
   setServiceStatus,
 }) => (
-  <div className="flex flex-wrap gap-2 mb-4 items-center">
+  <div className="flex flex-wrap gap-2 mb-4 items-center animate-fade-in-up">
     <input
       type="text"
       placeholder="Search by name, email, phone..."
-      className="border rounded px-3 py-2 w-64"
+      className="border rounded px-3 py-2 w-64 focus:ring-2 focus:ring-green-400 transition"
       value={filter}
       onChange={e => setFilter(e.target.value)}
     />
     <select
-      className="border rounded px-3 py-2"
+      className="border rounded px-3 py-2 focus:ring-2 focus:ring-green-400 transition"
       value={paymentStatus}
       onChange={e => setPaymentStatus(e.target.value)}
     >
@@ -145,7 +145,7 @@ const BookingFilter: React.FC<{
       <option value="failed">Failed</option>
     </select>
     <select
-      className="border rounded px-3 py-2"
+      className="border rounded px-3 py-2 focus:ring-2 focus:ring-green-400 transition"
       value={serviceStatus}
       onChange={e => setServiceStatus(e.target.value)}
     >
@@ -164,7 +164,7 @@ const Pagination: React.FC<{
 }> = ({ currentPage, totalPages, onPageChange }) => {
   if (totalPages <= 1) return null;
   return (
-    <div className="flex justify-center items-center gap-2 mt-4">
+    <div className="flex justify-center items-center gap-2 mt-4 animate-fade-in-up">
       <button
         className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
         onClick={() => onPageChange(currentPage - 1)}
@@ -307,21 +307,21 @@ const Admin: React.FC = () => {
   const handleRefresh = () => setRefreshKey(prev => prev + 1);
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
+    <div className="p-4 max-w-7xl mx-auto bg-gradient-to-br from-green-50 to-white min-h-screen animate-fade-in">
       <AdminHeader />
       <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
         <div className="flex items-center gap-3">
-          <span className="text-3xl font-extrabold text-green-700 tracking-tight drop-shadow">
+          <span className="text-3xl font-extrabold text-green-700 tracking-tight drop-shadow animate-gradient-text">
             <span className="bg-gradient-to-r from-green-400 to-green-700 bg-clip-text text-transparent">
               Admin Panel
             </span>
           </span>
-          <span className="ml-2 px-2 py-1 rounded bg-green-100 text-green-700 text-xs font-semibold shadow-sm">
+          <span className="ml-2 px-2 py-1 rounded bg-green-100 text-green-700 text-xs font-semibold shadow-sm animate-fade-in-up">
             Manage Bookings
           </span>
         </div>
         <button
-          className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow transition"
+          className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow transition animate-bounce-once"
           onClick={handleRefresh}
           title="Refresh"
         >
@@ -337,7 +337,7 @@ const Admin: React.FC = () => {
         serviceStatus={serviceStatus}
         setServiceStatus={setServiceStatus}
       />
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
+      <div className="overflow-x-auto bg-white rounded-lg shadow animate-fade-in-up">
         <table className="min-w-full text-sm">
           <thead>
             <tr className="bg-gray-100">
@@ -357,13 +357,13 @@ const Admin: React.FC = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={11} className="text-center py-8 text-gray-500">
+                <td colSpan={11} className="text-center py-8 text-gray-500 animate-pulse">
                   Loading...
                 </td>
               </tr>
             ) : filteredBookings.length === 0 ? (
               <tr>
-                <td colSpan={11} className="text-center py-8 text-gray-500">
+                <td colSpan={11} className="text-center py-8 text-gray-500 animate-fade-in">
                   No bookings found.
                 </td>
               </tr>
@@ -392,9 +392,68 @@ const Admin: React.FC = () => {
           @keyframes spin {
             100% { transform: rotate(360deg); }
           }
+          .animate-fade-in {
+            animation: fadeIn 0.7s ease;
+          }
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          .animate-fade-in-down {
+            animation: fadeInDown 0.7s cubic-bezier(.39,.575,.565,1) both;
+          }
+          @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-30px);}
+            100% { opacity: 1; transform: translateY(0);}
+          }
+          .animate-fade-in-up {
+            animation: fadeInUp 0.7s cubic-bezier(.39,.575,.565,1) both;
+          }
+          @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px);}
+            100% { opacity: 1; transform: translateY(0);}
+          }
+          .animate-row-fade-in {
+            animation: fadeInRow 0.5s cubic-bezier(.39,.575,.565,1) both;
+          }
+          @keyframes fadeInRow {
+            0% { opacity: 0; transform: translateX(-20px);}
+            100% { opacity: 1; transform: translateX(0);}
+          }
+          .animate-pulse-green {
+            animation: pulseGreen 1.2s infinite alternate;
+          }
+          @keyframes pulseGreen {
+            0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.2);}
+            100% { box-shadow: 0 0 8px 4px rgba(34,197,94,0.15);}
+          }
+          .animate-pulse-red {
+            animation: pulseRed 1.2s infinite alternate;
+          }
+          @keyframes pulseRed {
+            0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.2);}
+            100% { box-shadow: 0 0 8px 4px rgba(239,68,68,0.15);}
+          }
+          .animate-gradient-text {
+            animation: gradientText 2s ease-in-out infinite alternate;
+          }
+          @keyframes gradientText {
+            0% { filter: brightness(1);}
+            100% { filter: brightness(1.2);}
+          }
+          .animate-bounce-once {
+            animation: bounceOnce 0.5s;
+          }
+          @keyframes bounceOnce {
+            0% { transform: scale(1);}
+            30% { transform: scale(1.12);}
+            60% { transform: scale(0.96);}
+            100% { transform: scale(1);}
+          }
         `}
       </style>
     </div>
   );
 };
-export default Admin;
+
+export default Admin

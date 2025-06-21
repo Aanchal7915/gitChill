@@ -194,7 +194,8 @@ const Services = () => {
 
     <UserInfoModal
       open={showUserInfoModal}
-      onClose={() => {setUserInfoModal(false); setCurService(null)}}
+      setUserInfoModal={(curState:boolean)=>setUserInfoModal(curState)}
+      setCurService={(curState:boolean)=>setCurService(curState)}
       onSubmit={handleUserSubmitUserInfoModal}
     />
 

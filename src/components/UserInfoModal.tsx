@@ -2,13 +2,15 @@ import React, { useState } from "react";
 
 type UserInfoModalProps = {
   open: boolean;
-  onClose: () => void;
+  setUserInfoModal: (curState: boolean) => void;
+  setCurService: (curState: any)  => void;
   onSubmit: (name: string, phone: string, address:string) => void;
 };
 
 const UserInfoModal: React.FC<UserInfoModalProps> = ({
   open,
-  onClose,
+  setUserInfoModal,
+  setCurService,
   onSubmit,
 }) => {
   const [name, setName] = useState("");
@@ -27,7 +29,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({
     setName("");
     setPhone("");
     setAddress("")
-    onClose();
+    setUserInfoModal(false);
   };
 
   if (!open) return null;
@@ -37,7 +39,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({
       <div className="relative bg-white rounded-xl w-80 p-8 shadow-lg animate-scaleIn text-center">
         <button
           className="absolute top-3 right-4 text-gray-400 hover:text-gray-700 text-2xl"
-          onClick={onClose}
+          onClick={()=>{setUserInfoModal(false); setCurService(null)}}
           aria-label="Close"
         >
           &times;
