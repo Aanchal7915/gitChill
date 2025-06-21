@@ -206,7 +206,7 @@ const Admin: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // Fetch bookings from API with token and filters
+
   useEffect(() => {
     const fetchData = async () => {
       try {
