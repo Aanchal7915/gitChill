@@ -444,7 +444,7 @@ import { useState } from 'react';
 import { motion, Variants } from 'framer-motion'; // <-- Import Variants here
 import { initiatePayment } from '../utils/paymentService';
 import PaymentSuccessModal from './PaymentSuccessModal';
-import Temp from './Temp';
+import UserInfoModal from './UserInfoModal';
 
 const Services = () => {
   const [curService, setCurService] = useState<any | null>(null);
@@ -677,7 +677,7 @@ const Services = () => {
         date={`${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`}
       />
 
-      <Temp
+      <UserInfoModal
         open={showUserInfoModal}
         setTemp={(curState: boolean) => setUserInfoModal(curState)}
         setCurService={(curState: boolean) => setCurService(curState)}
