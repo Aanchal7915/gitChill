@@ -71,7 +71,7 @@ const BookingRow: React.FC<{
     <td className="p-2">{booking.email}</td>
     <td className="p-2">{booking.contact}</td>
     <td className="p-2">
-      <a className="" href={booking.location}><FaMapMarkerAlt className="text-lg"/></a>
+      <a className="" target="_blank" href={booking.location}><FaMapMarkerAlt className="text-lg text-red-500"/></a>
       {booking.address}
     </td>
     <td className="p-2">{booking.description}</td>
