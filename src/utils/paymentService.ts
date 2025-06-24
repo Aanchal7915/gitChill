@@ -13,6 +13,8 @@ interface RazorpayOptions {
     name: string;
     contact: string;
     address:string;
+    email: string;
+    location:string;
   };
   prefill: {
     name: string;
@@ -22,6 +24,7 @@ interface RazorpayOptions {
     color: string;
   };
 }
+
 
 export const initializeRazorpay = async () => {
   const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
@@ -51,6 +54,8 @@ interface CustomerDetails {
   name: string;
   phoneNu: string;
   address:string;
+  email: string;
+  location:string;
 }
 
 type SetPaymentDetails = (details: any) => void;
@@ -81,7 +86,9 @@ export const initiatePayment = async (
       notes: {
         name: customerDetails.name,
         contact: customerDetails.phoneNu,
-        address:customerDetails.address
+        address:customerDetails.address,
+        location:customerDetails.location,
+        email: customerDetails.email,
       },
       prefill: {
         name: customerDetails.name,

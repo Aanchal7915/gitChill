@@ -444,7 +444,7 @@ import { useState } from 'react';
 import { motion, Variants } from 'framer-motion'; // <-- Import Variants here
 import { initiatePayment } from '../utils/paymentService';
 import PaymentSuccessModal from './PaymentSuccessModal';
-import UserInfoModal from './UserInfoModal';
+import Temp from './Temp';
 
 const Services = () => {
   const [curService, setCurService] = useState<any | null>(null);
@@ -460,20 +460,24 @@ const Services = () => {
   const handleUserSubmitUserInfoModal = (
     name: string,
     phoneNu: string,
-    address: string
+    location: string,
+    address: string,
+    email: string
   ) => {
-    handlePayment(curService, name, phoneNu, address);
+    handlePayment(curService, name, phoneNu, location, address, email);
   };
 
   const handlePayment = async (
     service: any,
     name: string,
     phoneNu: string,
-    address: string
+    location:string,
+    address: string,
+    email: string,
   ) => {
     try {
       const amount = parseInt(service.price.replace('₹', ''));
-      const customerDetails = { name, phoneNu, address };
+      const customerDetails = { name, phoneNu, location, address, email };
       await initiatePayment(
         amount,
         service.name,
@@ -673,14 +677,14 @@ const Services = () => {
         date={`${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`}
       />
 
-      <UserInfoModal
+      <Temp
         open={showUserInfoModal}
-        setUserInfoModal={(curState: boolean) => setUserInfoModal(curState)}
+        setTemp={(curState: boolean) => setUserInfoModal(curState)}
         setCurService={(curState: boolean) => setCurService(curState)}
         onSubmit={handleUserSubmitUserInfoModal}
       />
 
-      <style jsx>{`
+      <style>{`
         @keyframes blob {
           0% {
             transform: translate(0px, 0px) scale(1);

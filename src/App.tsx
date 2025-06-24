@@ -8,6 +8,7 @@ import Admin from "./components/Admin"
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import NotFound from "./components/NotFound";
+import Temp from "./components/Temp";
 
 const isAdminAuthenticated = () => {
   // Check if admin is logged in by verifying localStorage
@@ -37,6 +38,17 @@ function App() {
       <Routes>
         <Route path="/" element={<MainSite />} />
         <Route path="/login" element={<Login />} />
+        <Route
+          path="/temp"
+          element={
+            <Temp
+              open={true}
+              setTemp={() => {}}
+              setCurService={() => {}}
+              onSubmit={() => {}}
+            />
+          }
+        />
         <Route
           path="/admin"
           element={

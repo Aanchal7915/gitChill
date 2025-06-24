@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineHome, AiOutlineLogout, AiOutlineReload } from "react-icons/ai";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 // Types
 type Booking = {
@@ -9,6 +10,7 @@ type Booking = {
   address: string;
   amount: number;
   contact: string;
+  location: string;
   createdAt: string;
   currency: string;
   description: string;
@@ -68,7 +70,10 @@ const BookingRow: React.FC<{
     <td className="p-2">{booking.name}</td>
     <td className="p-2">{booking.email}</td>
     <td className="p-2">{booking.contact}</td>
-    <td className="p-2">{booking.address}</td>
+    <td className="p-2">
+      <a className="" href={booking.location}><FaMapMarkerAlt className="text-lg"/></a>
+      {booking.address}
+    </td>
     <td className="p-2">{booking.description}</td>
     <td className="p-2">₹{booking.amount}</td>
     <td className="p-2">{booking.currency}</td>

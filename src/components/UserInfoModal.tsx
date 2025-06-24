@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+
 type UserInfoModalProps = {
   open: boolean;
   setUserInfoModal: (curState: boolean) => void;
@@ -72,6 +73,8 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({
             onChange={e => setAddress(e.target.value)}
             required
           />
+
+
           {error && <div className="text-red-500 text-sm">{error}</div>}
           <button
             type="submit"
