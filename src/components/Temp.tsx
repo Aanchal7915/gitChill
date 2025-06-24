@@ -13,7 +13,7 @@ type TempProps = {
   ) => void;
 };
 
-const Temp: React.FC<TempProps> = ({
+const UserInfoModal: React.FC<TempProps> = ({
   open,
   setTemp,
   setCurService,
@@ -177,4 +177,4 @@ const Temp: React.FC<TempProps> = ({
   );
 };
 
-export default Temp
+export default UserInfoModal
