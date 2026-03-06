@@ -9,9 +9,9 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-6">
             <div className="flex items-center space-x-3">
-              <img 
-                src="/WhatsApp Image 2025-06-14 at 6.48.37 AM (1).jpeg" 
-                alt="GetChill Logo" 
+              <img
+                src="/WhatsApp Image 2025-06-14 at 6.48.37 AM (1).jpeg"
+                alt="GetChill Logo"
                 className="h-12 w-auto"
               />
               <span className="text-2xl font-bold">GetChill</span>

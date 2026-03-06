@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Phone, MessageCircle, Mail, MapPin, Clock, Send } from 'lucide-react';
+import { Phone, MessageCircle, Clock, Send } from 'lucide-react';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -7,17 +7,32 @@ const Contact = () => {
     phone: '',
     email: '',
     service: '',
-    message: ''
+    message: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const whatsappMessage = `Hi GetChill! I'm interested in ${formData.service}. 
-Name: ${formData.name}
-Phone: ${formData.phone}
-Email: ${formData.email}
-Message: ${formData.message}`;
-    
+
+    // Send booking to backend
+    try {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/payment/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          phoneNu: formData.phone,
+          address: '',
+          email: formData.email || '',
+          service_name: formData.service,
+          amount: 0,
+        }),
+      });
+    } catch (_err) {
+      // Backend save fail hone pe bhi WhatsApp message jayega
+    }
+
+    // WhatsApp pe message bhejna
+    const whatsappMessage = `Hi GetChill! New Service Request:\nName: ${formData.name}\nPhone: ${formData.phone}\nService: ${formData.service}\nMessage: ${formData.message}`;
     const whatsappUrl = `https://wa.me/918295151180?text=${encodeURIComponent(whatsappMessage)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -30,195 +45,143 @@ Message: ${formData.message}`;
   };
 
   return (
-    <section id="contact" className="py-20 bg-gradient-to-br from-blue-50 to-cyan-50">
+    <section id="contact" className="py-12 bg-white">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-800 mb-6">
-            Get In <span className="text-blue-600">Touch</span>
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Ready to experience professional AC services? Contact us today for a free consultation and quote.
-          </p>
-        </div>
+        <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto">
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Contact Information */}
-          <div className="space-y-8">
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6">Contact Information</h3>
-              
-              <div className="space-y-6">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
-                    <Phone className="text-blue-600" size={24} />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800">Phone</h4>
-                    <a href="tel:01169312402" className="text-blue-600 hover:underline">01169312402</a>
-                  </div>
+          {/* Info Side */}
+          <div className="lg:w-1/3 space-y-4">
+            <h2 className="text-3xl font-bold text-gray-800 leading-tight">
+              Get In <span className="text-blue-600">Touch</span>
+            </h2>
+            <p className="text-gray-600 text-sm">
+              Professional AC services at your doorstep. Fast, reliable, and affordable.
+            </p>
+
+            <div className="grid gap-3 pt-4">
+              <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-xl">
+                <div className="bg-blue-600 p-2 rounded-lg text-white">
+                  <Phone size={18} />
                 </div>
-
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full">
-                    <MessageCircle className="text-green-600" size={24} />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800">WhatsApp</h4>
-                    <a href="https://wa.me/918295151180" className="text-green-600 hover:underline">+91 8295151180</a>
-                  </div>
+                <div>
+                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Call Us</p>
+                  <a href="tel:01169312402" className="text-sm font-semibold text-gray-800">01169312402</a>
                 </div>
+              </div>
 
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-full">
-                    <Mail className="text-purple-600" size={24} />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800">Email</h4>
-                    <a href="mailto:info@getchill.com" className="text-purple-600 hover:underline">info@getchill.com</a>
-                  </div>
+              <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-xl">
+                <div className="bg-green-600 p-2 rounded-lg text-white">
+                  <MessageCircle size={18} />
                 </div>
+                <div>
+                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">WhatsApp</p>
+                  <a href="https://wa.me/918295151180" className="text-sm font-semibold text-gray-800">+91 8295151180</a>
+                </div>
+              </div>
 
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-full">
-                    <Clock className="text-orange-600" size={24} />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800">Working Hours</h4>
-                    <p className="text-gray-600">24/7 Emergency Service Available</p>
-                    <p className="text-gray-600">Mon-Sun: 8:00 AM - 8:00 PM</p>
-                  </div>
+              <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-xl">
+                <div className="bg-purple-600 p-2 rounded-lg text-white">
+                  <Clock size={18} />
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Working Hours</p>
+                  <p className="text-sm font-semibold text-gray-800">24/7 Support Available</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6">Why Choose GetChill?</h3>
-              <ul className="space-y-3 text-gray-600">
-                <li className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                  <span>Licensed and insured technicians</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                  <span>Transparent pricing with no hidden costs</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                  <span>Same-day service available</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                  <span>Warranty on all services</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                  <span>100% customer satisfaction guarantee</span>
-                </li>
+            <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 mt-4">
+              <h4 className="text-xs font-bold text-gray-700 mb-2 uppercase tracking-widest">Our Promise</h4>
+              <ul className="space-y-1.5 text-xs text-gray-600 font-medium">
+                <li className="flex items-center gap-2"><div className="w-1 h-1 bg-blue-600 rounded-full"></div> Licensed Technicians</li>
+                <li className="flex items-center gap-2"><div className="w-1 h-1 bg-blue-600 rounded-full"></div> Transparent Pricing</li>
+                <li className="flex items-center gap-2"><div className="w-1 h-1 bg-blue-600 rounded-full"></div> 100% Satisfaction</li>
               </ul>
             </div>
           </div>
 
-          {/* Contact Form */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">Request a Service</h3>
-            
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="Your full name"
-                  />
+          {/* Form Side */}
+          <div className="lg:w-2/3">
+            <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-2xl border border-gray-100">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="John Doe"
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Phone</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      required
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="9876543210"
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number *
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    required
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="Your phone number"
-                  />
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Service</label>
+                    <select
+                      name="service"
+                      required
+                      value={formData.service}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm appearance-none"
+                    >
+                      <option value="">Select Service</option>
+                      <option value="Split AC Service">Split AC Service</option>
+                      <option value="Window AC Service">Window AC Service</option>
+                      <option value="Installation">Installation</option>
+                      <option value="Repair / Gas Leak">Repair / Gas Leak</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Email (Optional)</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="john@example.com"
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  placeholder="your.email@example.com"
-                />
-              </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-gray-500 uppercase ml-1">Additional Message</label>
+                  <textarea
+                    name="message"
+                    rows={2}
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Any specific instructions..."
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm resize-none"
+                  ></textarea>
+                </div>
 
-              <div>
-                <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-2">
-                  Service Required *
-                </label>
-                <select
-                  id="service"
-                  name="service"
-                  required
-                  value={formData.service}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white py-3.5 rounded-xl hover:bg-blue-700 transition-all font-bold flex items-center justify-center space-x-2 shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 active:translate-y-0"
                 >
-                  <option value="">Select a service</option>
-                  <option value="Window AC with Jet Spray">Window AC with Jet Spray</option>
-                  <option value="Split AC Servicing with Spray">Split AC Servicing with Spray</option>
-                  <option value="Window AC Service with Foam">Window AC Service with Foam</option>
-                  <option value="Split AC Servicing with Foam">Split AC Servicing with Foam</option>
-                  <option value="AC Installation Split AC">AC Installation Split AC</option>
-                  <option value="AC Installation Window AC">AC Installation Window AC</option>
-                  <option value="AC Repairing and Gas Filling">AC Repairing and Gas Filling</option>
-                  <option value="Visit and Checking">Visit and Checking</option>
-                  <option value="AC Deinstallation">AC Deinstallation</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                  Additional Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  value={formData.message}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
-                  placeholder="Tell us more about your requirements..."
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold flex items-center justify-center space-x-2"
-              >
-                <Send size={20} />
-                <span>Send via WhatsApp</span>
-              </button>
-            </form>
+                  <Send size={18} />
+                  <span>Request Booking Now</span>
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>

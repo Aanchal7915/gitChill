@@ -1,46 +1,59 @@
 import { Wrench, Settings, Thermometer, Wind, Zap, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
-import { initiatePayment } from '../utils/paymentService';
 import PaymentSuccessModal from './PaymentSuccessModal';
+
 import UserInfoModal from "./UserInfoModal";
 
 
 const Services = () => {
   const [curService, setCurService] = useState<any | null>(null);
- 
+
   const [paymentDetail, setPayementDetails] = useState<any | null>(null);
   const [showPaymentModal, setPaymentModal] = useState(false);
   const [showUserInfoModal, setUserInfoModal] = useState(false);
-  
-  const bookBtnClickHanlder=(service: any)=>{
+
+  const bookBtnClickHanlder = (service: any) => {
     setCurService(service)
     setUserInfoModal(true);
   }
 
-  const handleUserSubmitUserInfoModal=(name:string, phoneNu:string, address:string)=>{
-    // console.log(name, phoneNu, address)
-    handlePayment(curService, name, phoneNu, address)
+  const handleUserSubmitUserInfoModal = (name: string, phoneNu: string, address: string, date?: string, time?: string) => {
+    handlePayment(curService, name, phoneNu, address, date, time)
   }
 
-  const handlePayment = async (service: any, name:string, phoneNu:string, address:string) => {
+  const handlePayment = async (service: any, name: string, phoneNu: string, address: string, dateOfVisit?: string, preferredTiming?: string) => {
     try {
       const amount = parseInt(service.price.replace('₹', ''));
-
-      // You can replace these with actual customer details from a form or user profile
       const customerDetails = {
-        name: name,
-        phoneNu: phoneNu,
-        address:address
+        name,
+        phoneNu,
+        address,
+        service_name: service.name,
+        amount,
+        dateOfVisit,
+        preferredTiming
       };
-      // console.log(amount, service.name, customerDetails);
-      await initiatePayment(amount, service.name, customerDetails, setPayementDetails, setPaymentModal);
+
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/payment/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(customerDetails),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setPayementDetails({ bookingId: data.bookingId, amount, name, serviceName: service.name });
+        setPaymentModal(true);
+      } else {
+        alert(data.message || 'Booking failed.');
+      }
     } catch (error) {
-      // console.error('Payment failed:', error);
-      alert('Payment failed. Please try again.');
+      alert('Something went wrong. Please try again.');
     } finally {
       setCurService(null);
     }
   };
+
 
   const services = [
     {
@@ -189,13 +202,13 @@ const Services = () => {
       onClose={() => setPaymentModal(false)}
       payment={paymentDetail}
       amount={paymentDetail?.amount ?? 0}
-      date={`${new Date()}`}
     />
+
 
     <UserInfoModal
       open={showUserInfoModal}
-      setUserInfoModal={(curState:boolean)=>setUserInfoModal(curState)}
-      setCurService={(curState:boolean)=>setCurService(curState)}
+      setUserInfoModal={(curState: boolean) => setUserInfoModal(curState)}
+      setCurService={(curState: boolean) => setCurService(curState)}
       onSubmit={handleUserSubmitUserInfoModal}
     />
 

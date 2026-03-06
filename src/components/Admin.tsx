@@ -5,22 +5,22 @@ import { AiOutlineHome, AiOutlineLogout, AiOutlineReload } from "react-icons/ai"
 // Types
 type Booking = {
   _id: string;
-  razorpay_payment_id: string;
+  bookingId?: string;
   address: string;
-  amount: number;
   contact: string;
   createdAt: string;
   currency: string;
   description: string;
   email: string;
-  paymentStatus: string;
   method: string;
   name: string;
-  razorpay_order_id: string;
   status_history: { status: string; at: string }[];
   updatedAt: string;
   serviceStatus?: boolean;
+  preferredTiming?: string;
+  dateOfVisit?: string;
 };
+
 
 const PAGE_SIZE = 10;
 
@@ -35,20 +35,20 @@ const AdminHeader: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-between bg-green-600 text-white px-6 py-4 rounded-lg mb-6 shadow animate-fade-in-down">
+    <div className="flex items-center justify-between bg-blue-600 text-white px-6 py-4 rounded-lg mb-6 shadow animate-fade-in-down">
       <div className="flex items-center gap-2 text-xl font-bold">
         <span>Admin Panel</span>
       </div>
       <div className="flex items-center gap-4">
         <button
-          className="flex items-center gap-1 hover:text-green-200 transition"
+          className="flex items-center gap-1 hover:text-blue-200 transition"
           onClick={() => navigate("/")}
         >
           <AiOutlineHome className="text-2xl" />
           <span className="hidden sm:inline">Home</span>
         </button>
         <button
-          className="flex items-center gap-1 hover:text-green-200 transition"
+          className="flex items-center gap-1 hover:text-blue-200 transition"
           onClick={handleLogout}
         >
           <AiOutlineLogout className="text-2xl" />
@@ -64,44 +64,35 @@ const BookingRow: React.FC<{
   booking: Booking;
   onStatusChange: (id: string, serviceStatus: boolean) => void;
 }> = ({ booking, onStatusChange }) => (
-  <tr className="border-b hover:bg-green-50 transition animate-row-fade-in">
-    <td className="p-2">{booking.name}</td>
-    <td className="p-2">{booking.email}</td>
-    <td className="p-2">{booking.contact}</td>
-    <td className="p-2">{booking.address}</td>
-    <td className="p-2">{booking.description}</td>
-    <td className="p-2">₹{booking.amount}</td>
-    <td className="p-2">{booking.currency}</td>
-    <td className="p-2">{new Date(booking.createdAt).toLocaleString()}</td>
-    <td className="p-2">
-      <span
-        className={`px-2 py-1 rounded text-xs font-semibold transition-all duration-300 ${
-          booking.paymentStatus === "captured"
-            ? "bg-green-100 text-green-700 animate-pulse-green"
-            : "bg-yellow-100 text-yellow-700"
-        }`}
-      >
-        {booking.paymentStatus}
-      </span>
+  <tr className="border-b hover:bg-blue-50 transition animate-row-fade-in">
+    <td className="p-2 font-mono text-xs truncate max-w-[120px]" title={booking.bookingId || booking._id}>
+      {booking.bookingId || "ID: " + booking._id.slice(-6)}
     </td>
-    <td className="p-2">
+    <td className="p-2 font-semibold">{booking.name}</td>
+    <td className="p-2">{booking.contact}</td>
+    <td className="p-2 max-w-xs truncate" title={booking.address}>{booking.address}</td>
+    <td className="p-2">{booking.description}</td>
+    <td className="p-2 text-xs">
+      <div className="font-bold text-blue-800">{booking.dateOfVisit || "N/A"}</div>
+      <div className="text-gray-500 italic">{booking.preferredTiming || "N/A"}</div>
+    </td>
+    <td className="p-2 text-xs">{new Date(booking.createdAt).toLocaleDateString()}</td>
+    <td className="p-2 text-center">
       <span
-        className={`px-2 py-1 rounded text-xs font-semibold transition-all duration-300 ${
-          booking.serviceStatus
-            ? "bg-green-100 text-green-700 animate-pulse-green"
-            : "bg-red-100 text-red-700 animate-pulse-red"
-        }`}
+        className={`px-2 py-1 rounded text-xs font-semibold transition-all duration-300 ${booking.serviceStatus
+          ? "bg-green-100 text-green-700"
+          : "bg-red-100 text-red-700 animate-pulse"
+          }`}
       >
         {booking.serviceStatus ? "Fulfilled" : "Pending"}
       </span>
     </td>
     <td className="p-2">
       <button
-        className={`px-3 py-1 rounded shadow transition-all duration-300 transform hover:scale-105 ${
-          booking.serviceStatus
-            ? "bg-yellow-500 hover:bg-yellow-600 text-white"
-            : "bg-green-500 hover:bg-green-600 text-white"
-        }`}
+        className={`px-3 py-1 rounded shadow text-xs transition-all duration-300 transform hover:scale-105 ${booking.serviceStatus
+          ? "bg-gray-500 hover:bg-gray-600 text-white"
+          : "bg-blue-600 hover:bg-blue-700 text-white"
+          }`}
         onClick={() => onStatusChange(booking._id, !booking.serviceStatus)}
       >
         {booking.serviceStatus ? "Mark Pending" : "Mark Fulfilled"}
@@ -110,51 +101,38 @@ const BookingRow: React.FC<{
   </tr>
 );
 
+
 // Filter Component
 const BookingFilter: React.FC<{
   filter: string;
   setFilter: (v: string) => void;
-  paymentStatus: string;
-  setPaymentStatus: (v: string) => void;
   serviceStatus: string;
   setServiceStatus: (v: string) => void;
 }> = ({
   filter,
   setFilter,
-  paymentStatus,
-  setPaymentStatus,
   serviceStatus,
   setServiceStatus,
 }) => (
-  <div className="flex flex-wrap gap-2 mb-4 items-center animate-fade-in-up">
-    <input
-      type="text"
-      placeholder="Search by name, email, phone..."
-      className="border rounded px-3 py-2 w-64 focus:ring-2 focus:ring-green-400 transition"
-      value={filter}
-      onChange={e => setFilter(e.target.value)}
-    />
-    <select
-      className="border rounded px-3 py-2 focus:ring-2 focus:ring-green-400 transition"
-      value={paymentStatus}
-      onChange={e => setPaymentStatus(e.target.value)}
-    >
-      <option value="">All Status</option>
-      <option value="captured">Captured</option>
-      <option value="authorized">Authorized</option>
-      <option value="failed">Failed</option>
-    </select>
-    <select
-      className="border rounded px-3 py-2 focus:ring-2 focus:ring-green-400 transition"
-      value={serviceStatus}
-      onChange={e => setServiceStatus(e.target.value)}
-    >
-      <option value="">All Service Status</option>
-      <option value="true">Fulfilled</option>
-      <option value="false">Pending</option>
-    </select>
-  </div>
-);
+    <div className="flex flex-wrap gap-2 mb-4 items-center animate-fade-in-up">
+      <input
+        type="text"
+        placeholder="Search by name, email, phone..."
+        className="border rounded px-3 py-2 w-64 focus:ring-2 focus:ring-green-400 transition"
+        value={filter}
+        onChange={e => setFilter(e.target.value)}
+      />
+      <select
+        className="border rounded px-3 py-2 focus:ring-2 focus:ring-green-400 transition"
+        value={serviceStatus}
+        onChange={e => setServiceStatus(e.target.value)}
+      >
+        <option value="">All Service Status</option>
+        <option value="true">Fulfilled</option>
+        <option value="false">Pending</option>
+      </select>
+    </div>
+  );
 
 // Pagination Component
 const Pagination: React.FC<{
@@ -175,11 +153,10 @@ const Pagination: React.FC<{
       {Array.from({ length: totalPages }).map((_, idx) => (
         <button
           key={idx}
-          className={`px-3 py-1 rounded ${
-            currentPage === idx + 1
-              ? "bg-green-500 text-white"
-              : "bg-gray-200 hover:bg-gray-300"
-          }`}
+          className={`px-3 py-1 rounded ${currentPage === idx + 1
+            ? "bg-green-500 text-white"
+            : "bg-gray-200 hover:bg-gray-300"
+            }`}
           onClick={() => onPageChange(idx + 1)}
         >
           {idx + 1}
@@ -199,7 +176,6 @@ const Pagination: React.FC<{
 const Admin: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filter, setFilter] = useState("");
-  const [paymentStatus, setPaymentStatus] = useState("");
   const [serviceStatus, setServiceStatus] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -213,11 +189,6 @@ const Admin: React.FC = () => {
         setLoading(true);
         const token = localStorage.getItem("token");
         const params = new URLSearchParams();
-        if (paymentStatus)
-          params.append(
-            "paymentStatus",
-            paymentStatus.charAt(0).toUpperCase() + paymentStatus.slice(1)
-          );
         if (serviceStatus) params.append("serviceStatus", serviceStatus);
         params.append("page", currentPage.toString());
         params.append("limit", PAGE_SIZE.toString());
@@ -232,15 +203,14 @@ const Admin: React.FC = () => {
           setBookings(
             data.data.map((b: any) => ({
               ...b,
-              paymentStatus: b.paymentStatus,
               serviceStatus: b.serviceStatus ?? false,
             }))
           );
           setTotalPages(
             data.totalPages ||
-              (data.data.length < PAGE_SIZE && currentPage > 1
-                ? currentPage
-                : currentPage + 1)
+            (data.data.length < PAGE_SIZE && currentPage > 1
+              ? currentPage
+              : currentPage + 1)
           );
         } else {
           setBookings([]);
@@ -255,7 +225,7 @@ const Admin: React.FC = () => {
     };
     fetchData();
     // eslint-disable-next-line
-  }, [paymentStatus, serviceStatus, currentPage, refreshKey]);
+  }, [serviceStatus, currentPage, refreshKey]);
 
   // Filter bookings client-side for search
   const filteredBookings = bookings.filter(b =>
@@ -268,7 +238,7 @@ const Admin: React.FC = () => {
   // Reset to first page if filter changes (except page)
   useEffect(() => {
     setCurrentPage(1);
-  }, [paymentStatus, serviceStatus, filter]);
+  }, [serviceStatus, filter]);
 
   // Handle status change and update via API
   const handleStatusChange = async (id: string, serviceStatusVal: boolean) => {
@@ -291,9 +261,9 @@ const Admin: React.FC = () => {
           prev.map(b =>
             b._id === id
               ? {
-                  ...b,
-                  serviceStatus: data.data.serviceStatus,
-                }
+                ...b,
+                serviceStatus: data.data.serviceStatus,
+              }
               : b
           )
         );
@@ -332,8 +302,6 @@ const Admin: React.FC = () => {
       <BookingFilter
         filter={filter}
         setFilter={setFilter}
-        paymentStatus={paymentStatus}
-        setPaymentStatus={setPaymentStatus}
         serviceStatus={serviceStatus}
         setServiceStatus={setServiceStatus}
       />
@@ -341,19 +309,18 @@ const Admin: React.FC = () => {
         <table className="min-w-full text-sm">
           <thead>
             <tr className="bg-gray-100">
+              <th className="p-2 text-left">Booking ID</th>
               <th className="p-2 text-left">Name</th>
-              <th className="p-2 text-left">Email</th>
               <th className="p-2 text-left">Phone</th>
               <th className="p-2 text-left">Address</th>
               <th className="p-2 text-left">Service</th>
-              <th className="p-2 text-left">Amount</th>
-              <th className="p-2 text-left">Currency</th>
-              <th className="p-2 text-left">Date</th>
-              <th className="p-2 text-left">Payment Status</th>
-              <th className="p-2 text-left">Service Status</th>
+              <th className="p-2 text-left">Visit Preference</th>
+              <th className="p-2 text-left">Booked At</th>
+              <th className="p-2 text-center">Status</th>
               <th className="p-2 text-left">Action</th>
             </tr>
           </thead>
+
           <tbody>
             {loading ? (
               <tr>
