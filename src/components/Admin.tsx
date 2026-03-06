@@ -305,8 +305,8 @@ const Admin: React.FC = () => {
         serviceStatus={serviceStatus}
         setServiceStatus={setServiceStatus}
       />
-      <div className="overflow-x-auto bg-white rounded-lg shadow animate-fade-in-up">
-        <table className="min-w-full text-sm">
+      <div className="overflow-x-auto w-full bg-white rounded-lg shadow animate-fade-in-up">
+        <table className="w-full min-w-[950px] text-sm">
           <thead>
             <tr className="bg-gray-100">
               <th className="p-2 text-left">Booking ID</th>

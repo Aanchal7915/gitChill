@@ -30,7 +30,7 @@ const Header = () => {
             <a href="#services" className="text-gray-200 hover:text-blue-400 transition-colors font-medium">Services</a>
             <a href="#about" className="text-gray-200 hover:text-blue-400 transition-colors font-medium">About</a>
             <a href="#contact" className="text-gray-200 hover:text-blue-400 transition-colors font-medium">Contact</a>
-            <Link to={`${isLoggedIn() ? "/admin" : "/login"}`} className="text-gray-200 hover:text-blue-400 transition-colors font-medium">{`${isLoggedIn() ? "Dashboard" : "Login"}`}</Link>
+            <Link to={`${isLoggedIn() ? "/admin" : "/login"}`} className="text-gray-200 hover:text-blue-400 transition-colors font-medium">{`${isLoggedIn() ? "Admin Panel" : "Login"}`}</Link>
           </nav>
 
           {/* Contact Buttons */}
@@ -68,7 +68,7 @@ const Header = () => {
               <a href="#services" className="text-gray-200 hover:text-blue-400 transition-colors">Services</a>
               <a href="#about" className="text-gray-200 hover:text-blue-400 transition-colors">About</a>
               <a href="#contact" className="text-gray-200 hover:text-blue-400 transition-colors">Contact</a>
-              <Link to={`${isLoggedIn() ? "/admin" : "/login"}`} className="text-gray-200 hover:text-blue-400 transition-colors">{`${isLoggedIn() ? "Dashboard" : "Login"}`}</Link>
+              <Link to={`${isLoggedIn() ? "/admin" : "/login"}`} className="text-gray-200 hover:text-blue-400 transition-colors">{`${isLoggedIn() ? "Admin Panel" : "Login"}`}</Link>
               <div className="flex flex-col space-y-2 pt-4">
                 <a
                   href="tel:01169312402"
