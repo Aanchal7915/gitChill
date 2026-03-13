@@ -61,7 +61,6 @@ const PaymentSuccessModal = ({
             <span className="text-gray-800 font-semibold text-sm text-right max-w-[60%]">{payment?.serviceName || "—"}</span>
           </div>
 
-
           {/* Date booked */}
           <div className="flex justify-between items-center">
             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Booked At</span>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Phone, MessageCircle, Clock, Send } from 'lucide-react';
+import { Phone, MessageCircle, Mail, MapPin, Clock, Send, CheckCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +14,7 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Send booking to backend
+    // Send booking to backend first
     try {
       await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/payment/create-order`, {
         method: 'POST',
@@ -31,10 +32,27 @@ const Contact = () => {
       // Backend save fail hone pe bhi WhatsApp message jayega
     }
 
-    // WhatsApp pe message bhejna
-    const whatsappMessage = `Hi GetChill! New Service Request:\nName: ${formData.name}\nPhone: ${formData.phone}\nService: ${formData.service}\nMessage: ${formData.message}`;
+    // Send WhatsApp message
+    const whatsappMessage = `Hello GetChill Team! I'm interested in ${formData.service || 'a service'}.
+    
+Name: ${formData.name}
+Phone: ${formData.phone}
+Email: ${formData.email || 'N/A'}
+Message: ${formData.message || 'No additional message.'}
+    
+Please get in touch with me.`;
+
     const whatsappUrl = `https://wa.me/918295151180?text=${encodeURIComponent(whatsappMessage)}`;
     window.open(whatsappUrl, '_blank');
+
+    // Clear form after submission
+    setFormData({
+      name: '',
+      phone: '',
+      email: '',
+      service: '',
+      message: '',
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -44,144 +62,255 @@ const Contact = () => {
     });
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 15 } }
+  };
+
   return (
-    <section id="contact" className="py-12 bg-white">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto">
+    <section id="contact" className="py-20 lg:py-28 bg-gradient-to-br from-blue-50 via-white to-purple-50 relative overflow-hidden">
+      {/* Subtle background shapes */}
+      <div className="absolute top-1/4 left-0 w-48 h-48 bg-purple-100 rounded-full mix-blend-multiply filter blur-2xl opacity-20 animate-spin-slow-reverse"></div>
+      <div className="absolute bottom-1/4 right-0 w-64 h-64 bg-teal-100 rounded-full mix-blend-multiply filter blur-2xl opacity-20 animate-blob animation-delay-3000"></div>
 
-          {/* Info Side */}
-          <div className="lg:w-1/3 space-y-4">
-            <h2 className="text-3xl font-bold text-gray-800 leading-tight">
-              Get In <span className="text-blue-600">Touch</span>
-            </h2>
-            <p className="text-gray-600 text-sm">
-              Professional AC services at your doorstep. Fast, reliable, and affordable.
-            </p>
+      <div className="container mx-auto px-6 relative z-10">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={containerVariants}
+          className="text-center mb-16"
+        >
+          <motion.h2 variants={itemVariants} className="text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6">
+            Get In <span className="text-purple-600">Touch</span>
+          </motion.h2>
+          <motion.p variants={itemVariants} className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
+            Ready to experience professional AC services? Contact us today for a free consultation and quote. We're here to help!
+          </motion.p>
+        </motion.div>
 
-            <div className="grid gap-3 pt-4">
-              <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-xl">
-                <div className="bg-blue-600 p-2 rounded-lg text-white">
-                  <Phone size={18} />
-                </div>
-                <div>
-                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Call Us</p>
-                  <a href="tel:01169312402" className="text-sm font-semibold text-gray-800">01169312402</a>
-                </div>
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
+          {/* Left Column: Contact Information */}
+          <div className="space-y-8">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              variants={containerVariants}
+              className="bg-white rounded-3xl p-8 lg:p-10 shadow-xl border border-gray-100"
+            >
+              <motion.h3 variants={itemVariants} className="text-3xl font-extrabold text-gray-900 mb-6">Contact Information</motion.h3>
+
+              <div className="space-y-6">
+                <motion.div variants={itemVariants} className="flex items-center space-x-5">
+                  <div className="flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full shadow-sm flex-shrink-0">
+                    <Phone className="text-purple-600" size={28} />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-lg text-gray-900">Phone</h4>
+                    <a href="tel:01169312402" className="text-blue-600 hover:text-blue-700 hover:underline transition-colors font-medium text-base">01169312402</a>
+                  </div>
+                </motion.div>
+
+                <motion.div variants={itemVariants} className="flex items-center space-x-5">
+                  <div className="flex items-center justify-center w-16 h-16 bg-green-100 rounded-full shadow-sm flex-shrink-0">
+                    <MessageCircle className="text-green-600" size={28} />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-lg text-gray-900">WhatsApp</h4>
+                    <a href="https://wa.me/918295151180" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-700 hover:underline transition-colors font-medium text-base">+91 8295151180</a>
+                  </div>
+                </motion.div>
+
+                <motion.div variants={itemVariants} className="flex items-center space-x-5">
+                  <div className="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full shadow-sm flex-shrink-0">
+                    <Mail className="text-blue-600" size={28} />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-lg text-gray-900">Email</h4>
+                    <a href="mailto:info@getchill.com" className="text-blue-600 hover:text-blue-700 hover:underline transition-colors font-medium text-base">info@getchill.com</a>
+                  </div>
+                </motion.div>
+
+                <motion.div variants={itemVariants} className="flex items-center space-x-5">
+                  <div className="flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full shadow-sm flex-shrink-0">
+                    <Clock className="text-orange-600" size={28} />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-lg text-gray-900">Working Hours</h4>
+                    <p className="text-gray-700 text-base">24/7 Emergency Service Available</p>
+                    <p className="text-gray-700 text-base">Mon-Sun: 8:00 AM - 8:00 PM</p>
+                  </div>
+                </motion.div>
+
+                <motion.div variants={itemVariants} className="flex items-start space-x-5">
+                  <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full shadow-sm flex-shrink-0">
+                    <MapPin className="text-red-600" size={28} />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-lg text-gray-900">Our Location</h4>
+                    <p className="text-gray-700 text-base max-w-xs">Rohtak, Haryana, India</p>
+                    <p className="text-sm text-gray-600 mt-1">(Detailed address provided upon service booking)</p>
+                  </div>
+                </motion.div>
               </div>
+            </motion.div>
 
-              <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-xl">
-                <div className="bg-green-600 p-2 rounded-lg text-white">
-                  <MessageCircle size={18} />
-                </div>
-                <div>
-                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">WhatsApp</p>
-                  <a href="https://wa.me/918295151180" className="text-sm font-semibold text-gray-800">+91 8295151180</a>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-xl">
-                <div className="bg-purple-600 p-2 rounded-lg text-white">
-                  <Clock size={18} />
-                </div>
-                <div>
-                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Working Hours</p>
-                  <p className="text-sm font-semibold text-gray-800">24/7 Support Available</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 mt-4">
-              <h4 className="text-xs font-bold text-gray-700 mb-2 uppercase tracking-widest">Our Promise</h4>
-              <ul className="space-y-1.5 text-xs text-gray-600 font-medium">
-                <li className="flex items-center gap-2"><div className="w-1 h-1 bg-blue-600 rounded-full"></div> Licensed Technicians</li>
-                <li className="flex items-center gap-2"><div className="w-1 h-1 bg-blue-600 rounded-full"></div> Transparent Pricing</li>
-                <li className="flex items-center gap-2"><div className="w-1 h-1 bg-blue-600 rounded-full"></div> 100% Satisfaction</li>
-              </ul>
-            </div>
+            {/* Why Choose GetChill */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              variants={containerVariants}
+              className="bg-white rounded-3xl p-8 lg:p-10 shadow-xl border border-gray-100"
+            >
+              <motion.h3 variants={itemVariants} className="text-3xl font-extrabold text-gray-900 mb-6">Why Choose GetChill?</motion.h3>
+              <motion.ul variants={containerVariants} className="space-y-4 text-gray-700">
+                <motion.li variants={itemVariants} className="flex items-start space-x-3">
+                  <CheckCircle size={22} className="text-green-500 flex-shrink-0 mt-1" />
+                  <span>Licensed and Insured Technicians: Our team comprises highly trained and verified professionals.</span>
+                </motion.li>
+                <motion.li variants={itemVariants} className="flex items-start space-x-3">
+                  <CheckCircle size={22} className="text-green-500 flex-shrink-0 mt-1" />
+                  <span>Transparent Pricing: No hidden fees, no surprises. You'll know the cost upfront.</span>
+                </motion.li>
+                <motion.li variants={itemVariants} className="flex items-start space-x-3">
+                  <CheckCircle size={22} className="text-green-500 flex-shrink-0 mt-1" />
+                  <span>Same-Day Service Availability: We prioritize your comfort and aim for quick resolutions.</span>
+                </motion.li>
+                <motion.li variants={itemVariants} className="flex items-start space-x-3">
+                  <CheckCircle size={22} className="text-green-500 flex-shrink-0 mt-1" />
+                  <span>Warranty on All Services: We stand by our work with comprehensive warranty coverage.</span>
+                </motion.li>
+                <motion.li variants={itemVariants} className="flex items-start space-x-3">
+                  <CheckCircle size={22} className="text-green-500 flex-shrink-0 mt-1" />
+                  <span>100% Customer Satisfaction: Your complete satisfaction is our ultimate goal and promise.</span>
+                </motion.li>
+              </motion.ul>
+            </motion.div>
           </div>
 
-          {/* Form Side */}
-          <div className="lg:w-2/3">
-            <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-2xl border border-gray-100">
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Name</label>
+          {/* Right Column: Contact Form */}
+          <div className="space-y-8">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              variants={containerVariants}
+              className="bg-white rounded-3xl p-8 lg:p-10 shadow-xl border border-gray-100 flex flex-col h-full"
+            >
+              <motion.h3 variants={itemVariants} className="text-3xl font-extrabold text-gray-900 mb-6">Request a Service</motion.h3>
+
+              <form onSubmit={handleSubmit} className="space-y-6 flex-grow">
+                <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="name" className="block text-base font-semibold text-gray-700 mb-3">
+                      Full Name <span className="text-red-500">*</span>
+                    </label>
                     <input
                       type="text"
+                      id="name"
                       name="name"
                       required
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder="John Doe"
-                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm"
+                      className="w-full px-5 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-gray-700 placeholder-gray-400"
+                      placeholder="Your full name"
                     />
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Phone</label>
+                  <div>
+                    <label htmlFor="phone" className="block text-base font-semibold text-gray-700 mb-3">
+                      Phone Number <span className="text-red-500">*</span>
+                    </label>
                     <input
                       type="tel"
+                      id="phone"
                       name="phone"
                       required
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="9876543210"
-                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm"
+                      className="w-full px-5 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-gray-700 placeholder-gray-400"
+                      placeholder="Your 10-digit phone number"
                     />
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Service</label>
-                    <select
-                      name="service"
-                      required
-                      value={formData.service}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm appearance-none"
-                    >
-                      <option value="">Select Service</option>
-                      <option value="Split AC Service">Split AC Service</option>
-                      <option value="Window AC Service">Window AC Service</option>
-                      <option value="Installation">Installation</option>
-                      <option value="Repair / Gas Leak">Repair / Gas Leak</option>
-                    </select>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-500 uppercase ml-1">Email (Optional)</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="john@example.com"
-                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm"
-                    />
-                  </div>
-                </div>
+                <motion.div variants={itemVariants}>
+                  <label htmlFor="email" className="block text-base font-semibold text-gray-700 mb-3">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-5 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-gray-700 placeholder-gray-400"
+                    placeholder="your.email@example.com"
+                  />
+                </motion.div>
 
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 uppercase ml-1">Additional Message</label>
+                <motion.div variants={itemVariants}>
+                  <label htmlFor="service" className="block text-base font-semibold text-gray-700 mb-3">
+                    Service Required <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="service"
+                    name="service"
+                    required
+                    value={formData.service}
+                    onChange={handleChange}
+                    className="w-full px-5 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-gray-700 bg-white appearance-none"
+                  >
+                    <option value="" disabled>Select a service</option>
+                    <option value="Window AC Jet Spray Clean">Window AC Jet Spray Clean</option>
+                    <option value="Split AC Deep Clean & Spray">Split AC Deep Clean &amp; Spray</option>
+                    <option value="Window AC Foam Sanitization">Window AC Foam Sanitization</option>
+                    <option value="Split AC Premium Foam Wash">Split AC Premium Foam Wash</option>
+                    <option value="New Split AC Installation">New Split AC Installation</option>
+                    <option value="New Window AC Installation">New Window AC Installation</option>
+                    <option value="AC Repair & Gas Refilling">AC Repair &amp; Gas Refilling</option>
+                    <option value="Diagnostic Visit & Estimate">Diagnostic Visit &amp; Estimate</option>
+                    <option value="AC Deinstallation (All Types)">AC Deinstallation (All Types)</option>
+                    <option value="Other / General Inquiry">Other / General Inquiry</option>
+                  </select>
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                  <label htmlFor="message" className="block text-base font-semibold text-gray-700 mb-3">
+                    Additional Message
+                  </label>
                   <textarea
+                    id="message"
                     name="message"
-                    rows={2}
+                    rows={5}
                     value={formData.message}
                     onChange={handleChange}
-                    placeholder="Any specific instructions..."
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm resize-none"
+                    className="w-full px-5 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-gray-700 placeholder-gray-400 resize-y"
+                    placeholder="Tell us more about your requirements or specific issues you're facing..."
                   ></textarea>
-                </div>
+                </motion.div>
 
-                <button
+                <motion.button
+                  variants={itemVariants}
                   type="submit"
-                  className="w-full bg-blue-600 text-white py-3.5 rounded-xl hover:bg-blue-700 transition-all font-bold flex items-center justify-center space-x-2 shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 active:translate-y-0"
+                  className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-4 px-6 rounded-xl hover:opacity-95 font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-3 mt-auto"
                 >
-                  <Send size={18} />
-                  <span>Request Booking Now</span>
-                </button>
+                  <Send size={24} />
+                  <span>Send Request via WhatsApp</span>
+                </motion.button>
               </form>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

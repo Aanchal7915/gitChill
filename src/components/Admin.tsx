@@ -21,7 +21,6 @@ type Booking = {
   dateOfVisit?: string;
 };
 
-
 const PAGE_SIZE = 10;
 
 // Admin Header Component
@@ -101,7 +100,6 @@ const BookingRow: React.FC<{
   </tr>
 );
 
-
 // Filter Component
 const BookingFilter: React.FC<{
   filter: string;
@@ -114,25 +112,25 @@ const BookingFilter: React.FC<{
   serviceStatus,
   setServiceStatus,
 }) => (
-    <div className="flex flex-wrap gap-2 mb-4 items-center animate-fade-in-up">
-      <input
-        type="text"
-        placeholder="Search by name, email, phone..."
-        className="border rounded px-3 py-2 w-64 focus:ring-2 focus:ring-green-400 transition"
-        value={filter}
-        onChange={e => setFilter(e.target.value)}
-      />
-      <select
-        className="border rounded px-3 py-2 focus:ring-2 focus:ring-green-400 transition"
-        value={serviceStatus}
-        onChange={e => setServiceStatus(e.target.value)}
-      >
-        <option value="">All Service Status</option>
-        <option value="true">Fulfilled</option>
-        <option value="false">Pending</option>
-      </select>
-    </div>
-  );
+  <div className="flex flex-wrap gap-2 mb-4 items-center animate-fade-in-up">
+    <input
+      type="text"
+      placeholder="Search by name, email, phone..."
+      className="border rounded px-3 py-2 w-64 focus:ring-2 focus:ring-blue-400 transition"
+      value={filter}
+      onChange={e => setFilter(e.target.value)}
+    />
+    <select
+      className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400 transition"
+      value={serviceStatus}
+      onChange={e => setServiceStatus(e.target.value)}
+    >
+      <option value="">All Service Status</option>
+      <option value="true">Fulfilled</option>
+      <option value="false">Pending</option>
+    </select>
+  </div>
+);
 
 // Pagination Component
 const Pagination: React.FC<{
@@ -154,7 +152,7 @@ const Pagination: React.FC<{
         <button
           key={idx}
           className={`px-3 py-1 rounded ${currentPage === idx + 1
-            ? "bg-green-500 text-white"
+            ? "bg-blue-600 text-white"
             : "bg-gray-200 hover:bg-gray-300"
             }`}
           onClick={() => onPageChange(idx + 1)}
@@ -235,7 +233,7 @@ const Admin: React.FC = () => {
       .includes(filter.toLowerCase())
   );
 
-  // Reset to first page if filter changes (except page)
+  // Reset to first page if filter changes
   useEffect(() => {
     setCurrentPage(1);
   }, [serviceStatus, filter]);
@@ -269,29 +267,28 @@ const Admin: React.FC = () => {
         );
       }
     } catch (err) {
-      // Optionally handle error (e.g., show toast)
+      // Optionally handle error
     }
   };
 
-  // Refresh handler
   const handleRefresh = () => setRefreshKey(prev => prev + 1);
 
   return (
-    <div className="p-4 max-w-7xl mx-auto bg-gradient-to-br from-green-50 to-white min-h-screen animate-fade-in">
+    <div className="p-4 max-w-7xl mx-auto bg-gradient-to-br from-blue-50 to-white min-h-screen animate-fade-in">
       <AdminHeader />
       <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
         <div className="flex items-center gap-3">
-          <span className="text-3xl font-extrabold text-green-700 tracking-tight drop-shadow animate-gradient-text">
-            <span className="bg-gradient-to-r from-green-400 to-green-700 bg-clip-text text-transparent">
+          <span className="text-3xl font-extrabold text-blue-700 tracking-tight drop-shadow animate-gradient-text">
+            <span className="bg-gradient-to-r from-blue-400 to-blue-700 bg-clip-text text-transparent">
               Admin Panel
             </span>
           </span>
-          <span className="ml-2 px-2 py-1 rounded bg-green-100 text-green-700 text-xs font-semibold shadow-sm animate-fade-in-up">
+          <span className="ml-2 px-2 py-1 rounded bg-blue-100 text-blue-700 text-xs font-semibold shadow-sm animate-fade-in-up">
             Manage Bookings
           </span>
         </div>
         <button
-          className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow transition animate-bounce-once"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition animate-bounce-once"
           onClick={handleRefresh}
           title="Refresh"
         >
@@ -324,13 +321,13 @@ const Admin: React.FC = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={11} className="text-center py-8 text-gray-500 animate-pulse">
+                <td colSpan={9} className="text-center py-8 text-gray-500 animate-pulse">
                   Loading...
                 </td>
               </tr>
             ) : filteredBookings.length === 0 ? (
               <tr>
-                <td colSpan={11} className="text-center py-8 text-gray-500 animate-fade-in">
+                <td colSpan={9} className="text-center py-8 text-gray-500 animate-fade-in">
                   No bookings found.
                 </td>
               </tr>
@@ -387,20 +384,6 @@ const Admin: React.FC = () => {
             0% { opacity: 0; transform: translateX(-20px);}
             100% { opacity: 1; transform: translateX(0);}
           }
-          .animate-pulse-green {
-            animation: pulseGreen 1.2s infinite alternate;
-          }
-          @keyframes pulseGreen {
-            0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.2);}
-            100% { box-shadow: 0 0 8px 4px rgba(34,197,94,0.15);}
-          }
-          .animate-pulse-red {
-            animation: pulseRed 1.2s infinite alternate;
-          }
-          @keyframes pulseRed {
-            0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.2);}
-            100% { box-shadow: 0 0 8px 4px rgba(239,68,68,0.15);}
-          }
           .animate-gradient-text {
             animation: gradientText 2s ease-in-out infinite alternate;
           }
@@ -423,4 +406,4 @@ const Admin: React.FC = () => {
   );
 };
 
-export default Admin
+export default Admin;
