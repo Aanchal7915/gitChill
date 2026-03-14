@@ -55,7 +55,7 @@ const Header = () => {
 
   return (
     <header
-      className={`bg-white sticky top-0 z-50 transition-shadow duration-300 ${headerShadowClass}`}
+      className={`bg-black sticky top-0 z-50 transition-shadow duration-300 ${headerShadowClass}`}
       ref={headerRef}
     >
       <div className="container mx-auto px-6">
@@ -67,30 +67,29 @@ const Header = () => {
               alt="GetChill Logo"
               className="h-16 w-auto"
             />
-            <span className="text-3xl font-extrabold text-gray-900 whitespace-nowrap">GetChill</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            <a href="#home" onClick={handleNavLinkClick} className="text-gray-700 hover:text-purple-600 transition-colors font-semibold text-lg relative group">
+            <a href="#home" onClick={handleNavLinkClick} className="text-gray-200 hover:text-purple-400 transition-colors font-semibold text-lg relative group">
               Home
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </a>
-            <a href="#services" onClick={handleNavLinkClick} className="text-gray-700 hover:text-purple-600 transition-colors font-semibold text-lg relative group">
+            <a href="#services" onClick={handleNavLinkClick} className="text-gray-200 hover:text-purple-400 transition-colors font-semibold text-lg relative group">
               Services
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </a>
-            <a href="#about" onClick={handleNavLinkClick} className="text-gray-700 hover:text-purple-600 transition-colors font-semibold text-lg relative group">
+            <a href="#about" onClick={handleNavLinkClick} className="text-gray-200 hover:text-purple-400 transition-colors font-semibold text-lg relative group">
               About
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </a>
-            <a href="#contact" onClick={handleNavLinkClick} className="text-gray-700 hover:text-purple-600 transition-colors font-semibold text-lg relative group">
+            <a href="#contact" onClick={handleNavLinkClick} className="text-gray-200 hover:text-purple-400 transition-colors font-semibold text-lg relative group">
               Contact
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </a>
-            <Link to={`${isLoggedIn() ? "/admin" : "/login"}`} onClick={handleNavLinkClick} className="text-gray-700 hover:text-purple-600 transition-colors font-semibold text-lg relative group">
+            <Link to={`${isLoggedIn() ? "/admin" : "/login"}`} onClick={handleNavLinkClick} className="text-gray-200 hover:text-purple-400 transition-colors font-semibold text-lg relative group">
               {`${isLoggedIn() ? "Admin Panel" : "Login"}`}
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </Link>
           </nav>
 
@@ -116,11 +115,11 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 rounded-md hover:bg-gray-100 transition-colors"
+            className="lg:hidden p-2 rounded-md hover:bg-gray-800 transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle mobile menu"
           >
-            {isMenuOpen ? <X size={28} className="text-gray-800" /> : <Menu size={28} className="text-gray-800" />}
+            {isMenuOpen ? <X size={28} className="text-gray-200" /> : <Menu size={28} className="text-gray-200" />}
           </button>
         </div>
 
@@ -132,15 +131,15 @@ const Header = () => {
               animate="visible"
               exit="exit"
               variants={menuVariants}
-              className="lg:hidden py-6 border-t border-gray-100 bg-white absolute w-full left-0 shadow-lg"
+              className="lg:hidden py-6 border-t border-gray-800 bg-black absolute w-full left-0 shadow-lg"
             >
               <nav className="flex flex-col space-y-4 px-6">
-                <motion.a variants={menuItemVariants} href="#home" onClick={handleNavLinkClick} className="text-gray-800 hover:text-purple-600 transition-colors text-lg font-medium py-2">Home</motion.a>
-                <motion.a variants={menuItemVariants} href="#services" onClick={handleNavLinkClick} className="text-gray-800 hover:text-purple-600 transition-colors text-lg font-medium py-2">Services</motion.a>
-                <motion.a variants={menuItemVariants} href="#about" onClick={handleNavLinkClick} className="text-gray-800 hover:text-purple-600 transition-colors text-lg font-medium py-2">About</motion.a>
-                <motion.a variants={menuItemVariants} href="#contact" onClick={handleNavLinkClick} className="text-gray-800 hover:text-purple-600 transition-colors text-lg font-medium py-2">Contact</motion.a>
+                <motion.a variants={menuItemVariants} href="#home" onClick={handleNavLinkClick} className="text-gray-200 hover:text-purple-400 transition-colors text-lg font-medium py-2">Home</motion.a>
+                <motion.a variants={menuItemVariants} href="#services" onClick={handleNavLinkClick} className="text-gray-200 hover:text-purple-400 transition-colors text-lg font-medium py-2">Services</motion.a>
+                <motion.a variants={menuItemVariants} href="#about" onClick={handleNavLinkClick} className="text-gray-200 hover:text-purple-400 transition-colors text-lg font-medium py-2">About</motion.a>
+                <motion.a variants={menuItemVariants} href="#contact" onClick={handleNavLinkClick} className="text-gray-200 hover:text-purple-400 transition-colors text-lg font-medium py-2">Contact</motion.a>
                 <motion.div variants={menuItemVariants}>
-                  <Link to={`${isLoggedIn() ? "/admin" : "/login"}`} onClick={handleNavLinkClick} className="text-gray-800 hover:text-purple-600 transition-colors text-lg font-medium py-2 block">
+                  <Link to={`${isLoggedIn() ? "/admin" : "/login"}`} onClick={handleNavLinkClick} className="text-gray-200 hover:text-purple-400 transition-colors text-lg font-medium py-2 block">
                     {`${isLoggedIn() ? "Admin Panel" : "Login"}`}
                   </Link>
                 </motion.div>

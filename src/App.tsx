@@ -8,6 +8,8 @@ import Admin from "./components/Admin"
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import NotFound from "./components/NotFound";
+import PrivacyPolicy from './components/PrivacyPolicy';
+import Terms from './components/Terms';
 
 const isAdminAuthenticated = () => {
   // Check if admin is logged in by verifying localStorage
@@ -45,6 +47,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-conditions" element={<Terms />} />
         <Route path="/not-found" element={<NotFound />} />
         <Route path="*" element={<Navigate to="/not-found" replace />} />
       </Routes>

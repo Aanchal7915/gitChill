@@ -1,5 +1,6 @@
 import React from 'react';
 import { Phone, MessageCircle, Mail, MapPin, Facebook, Instagram, Twitter, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -147,8 +148,8 @@ const Footer = () => {
               © {new Date().getFullYear()} GetChill AC Services. All rights reserved.
             </p>
             <div className="flex space-x-8 text-gray-400 text-base">
-              <a href="#" className="hover:text-white transition-colors font-medium">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition-colors font-medium">Terms of Service</a>
+              <Link to="/privacy-policy" className="hover:text-white transition-colors font-medium">Privacy Policy</Link>
+              <Link to="/terms-conditions" className="hover:text-white transition-colors font-medium">Terms of Service</Link>
             </div>
           </div>
         </div>
